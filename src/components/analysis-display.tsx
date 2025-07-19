@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import {
   Accordion,
   AccordionContent,
@@ -24,6 +25,7 @@ import {
 } from '@/components/ui/dialog'
 import {
   BrainCircuit,
+  ExternalLink,
   FileCode,
   KeyRound,
   ListChecks,
@@ -58,7 +60,7 @@ function ToolCard({
           </CardContent>
         </Card>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[625px]">
+      <DialogContent className="sm:max-w-[900px] lg:max-w-[1200px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {icon} {title}
@@ -72,6 +74,10 @@ function ToolCard({
 }
 
 export function AnalysisDisplay({ result }: { result: AnalysisResult }) {
+  const getGithubFileUrl = (filePath: string) => {
+    return `${result.repoUrl}/blob/${result.repoMetadata.defaultBranch}/${filePath}`
+  }
+
   return (
     <div className="container mx-auto py-10 px-4">
       <div className="space-y-8">
@@ -140,14 +146,39 @@ export function AnalysisDisplay({ result }: { result: AnalysisResult }) {
 
         <div className="grid md:grid-cols-2 gap-8">
           <div>
-            <h3 className="text-2xl font-bold mb-4 font-headline flex items-center gap-2">
-              <FileCode /> Major File Explanations
-            </h3>
+            <div className="mb-4">
+              <h3 className="text-2xl font-bold font-headline flex items-center gap-2 mb-1">
+                <FileCode /> What Should I Read First?
+              </h3>
+              <p className="text-base text-muted-foreground">
+                Here are the{' '}
+                <span className="text-primary font-semibold">
+                  {result.explanations.explanations.length}
+                </span>{' '}
+                files that matter most — click to explore!
+              </p>
+            </div>
             <Accordion type="single" collapsible className="w-full">
               {result.explanations.explanations.map((item, index) => (
                 <AccordionItem value={`item-${index}`} key={index}>
-                  <AccordionTrigger>
-                    <span className="font-mono text-primary">{item.file}</span>
+                  <AccordionTrigger className="hover:no-underline">
+                    <div className="flex items-center justify-between w-full group">
+                      <span className="font-mono text-primary text-left">
+                        {item.file}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity ml-2 gap-1"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          window.open(getGithubFileUrl(item.file), '_blank')
+                        }}
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        Source
+                      </Button>
+                    </div>
                   </AccordionTrigger>
                   <AccordionContent>{item.explanation}</AccordionContent>
                 </AccordionItem>
@@ -159,13 +190,17 @@ export function AnalysisDisplay({ result }: { result: AnalysisResult }) {
               <BrainCircuit /> Explore Deeper
             </h3>
             <div className="grid gap-4">
-              <ToolCard
+              {/* <ToolCard
                 icon={<ListChecks className="w-6 h-6 text-primary" />}
                 title="What Should I Read First?"
                 description="AI-prioritized list of files to understand this repo quickly."
               >
-                <WhatToReadFirstTool entryPoints={result.entryPoints} />
-              </ToolCard>
+                <WhatToReadFirstTool
+                  entryPoints={result.entryPoints}
+                  repoUrl={result.repoUrl}
+                  defaultBranch={result.repoMetadata.defaultBranch}
+                />
+              </ToolCard> */}
               <ToolCard
                 icon={<ScanLine className="w-6 h-6 text-primary" />}
                 title="File Purpose Classifier"
