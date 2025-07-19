@@ -13,7 +13,9 @@ import { analyzeRepoAction, type AnalysisResult } from '@/app/actions';
 import { AnalysisDisplay } from '@/components/analysis-display';
 
 const formSchema = z.object({
-  repoUrl: z.string().url().regex(/https.github.com\/[\w-]+\/[\w-]+/, 'Please enter a valid GitHub repository URL.'),
+  repoUrl: z.string()
+    .url()
+    // .regex(/^https:\/\/github\.com\/[\w-]+\/[\w-]+$/, 'Please enter a valid GitHub repository URL.'),
 });
 
 type FormValues = z.infer<typeof formSchema>;
