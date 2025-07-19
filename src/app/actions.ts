@@ -23,6 +23,7 @@ export type AnalysisResult = {
   explanations: ExplainFilesOutput
   fileList: string[]
   envExampleContent: string | null
+  readmeContent: string
   repoMetadata: {
     defaultBranch: string
     updatedAt: string
@@ -77,6 +78,7 @@ export async function analyzeRepoAction({
       explanations,
       fileList,
       envExampleContent,
+      readmeContent,
       repoMetadata,
     }
   } catch (error) {
