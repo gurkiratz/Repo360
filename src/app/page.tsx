@@ -26,7 +26,7 @@ function Header() {
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Sparkles className="w-8 h-8 text-primary" />
-          <h1 className="text-2xl font-bold tracking-tight">RepoAI</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Repo360</h1>
         </div>
         <Button variant="ghost" size="icon" asChild>
           <a href="https://github.com/firebase/studio-extra-quad" target="_blank" rel="noopener noreferrer">

@@ -1,4 +1,4 @@
-# **App Name**: RepoAI
+# **App Name**: Repo 360
 
 ## Core Features:
 
