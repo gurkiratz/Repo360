@@ -21,11 +21,24 @@ const SummarizeRepoInputSchema = z.object({
 export type SummarizeRepoInput = z.infer<typeof SummarizeRepoInputSchema>
 
 const SummarizeRepoOutputSchema = z.object({
-  summary: z
+  purpose: z
     .string()
     .describe(
-      'A concise summary of the repository including its purpose, tech stack, and entry point.'
+      'Concise description of what this repository does and its main objective.'
     ),
+  howToRun: z
+    .string()
+    .describe(
+      'Key commands and steps to run/start the project (scripts, Docker, setup instructions).'
+    ),
+  techStack: z
+    .string()
+    .describe(
+      'Primary technologies, frameworks, and languages used in the project.'
+    ),
+  entryPoints: z
+    .string()
+    .describe('Main entry files and starting points for the codebase.'),
 })
 export type SummarizeRepoOutput = z.infer<typeof SummarizeRepoOutputSchema>
 
@@ -60,9 +73,7 @@ const prompt = ai.definePrompt({
   name: 'summarizeRepoPrompt',
   input: { schema: SummarizeRepoInputSchema },
   output: { schema: SummarizeRepoOutputSchema },
-  prompt: `You are an expert code repository analyzer with deep knowledge of software development patterns, frameworks, and project structures.
-
-Your task is to analyze the provided repository information and generate a comprehensive yet concise summary that helps developers quickly understand what this project does and how it's built.
+  prompt: `You are an expert code repository analyzer. Generate a concise Executive Summary with exactly 4 sections.
 
 ## Repository Information:
 **URL:** {{{repoUrl}}}
@@ -77,45 +88,31 @@ Your task is to analyze the provided repository information and generate a compr
 {{{packageJsonContent}}}
 \`\`\`
 
-## Analysis Instructions:
+## Generate Executive Summary:
 
-1. **Purpose & Description**: 
-   - Extract the main purpose from README and package.json description
-   - Identify the problem this project solves
-   - Note the target audience (developers, end-users, etc.)
+**PURPOSE**: Extract from README title/description and package.json description what this repository does and its main objective. Keep it to 1-2 sentences.
 
-2. **Technology Stack Analysis**:
-   - Primary language and version
-   - Key frameworks and libraries (React, Express, Next.js, etc.)
-   - Development tools (TypeScript, ESLint, testing frameworks)
-   - Build tools and bundlers
-   - Database or storage solutions mentioned
+**HOW TO RUN**: Identify key commands to start/run the project. Look for:
+- package.json scripts (dev, start, build)
+- Docker commands in README
+- Setup instructions
+- Installation steps
+Keep concise - just the essential commands.
 
-3. **Project Structure & Entry Points**:
-   - Identify main entry point from package.json "main" field
-   - Look for common entry patterns (index.js, src/index.ts, app.js)
-   - Note important scripts (start, build, dev, test)
-   - Identify if it's a library, application, or tool
+**TECH STACK**: List primary technologies from package.json dependencies and README:
+- Language (JavaScript/TypeScript/Python/etc.)
+- Main framework (React, Next.js, Express, etc.)
+- Key libraries
+- Build tools
+Format as comma-separated list.
 
-4. **Key Features & Functionality**:
-   - Extract main features from README
-   - Note any APIs, CLI commands, or interfaces
-   - Identify deployment or usage patterns
+**ENTRY POINTS**: Identify main starting files from:
+- package.json "main" field
+- Common patterns (index.js, src/index.ts, app.js, main.py)
+- Script targets
+List 2-3 most important files.
 
-5. **Development Setup Indicators**:
-   - Required Node.js version
-   - Key development dependencies
-   - Testing setup
-   - Build process complexity
-
-## Output Requirements:
-- Be concise but comprehensive
-- Use technical terms appropriately
-- Highlight unique or notable aspects
-- Prioritize information that helps developers understand the project quickly
-- If information is missing or unclear, note it explicitly
-
-Generate your analysis now:`,
+Keep each section concise and actionable for developers.`,
 })
 
 const summarizeRepoFlow = ai.defineFlow(
