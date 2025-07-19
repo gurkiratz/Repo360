@@ -1,10 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import type { AnalysisResult } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { BrainCircuit, FileCode, KeyRound, ListChecks, ScanLine, Sparkles } from 'lucide-react';
 import { WhatToReadFirstTool } from '@/components/tools/what-to-read-first-tool';
@@ -92,14 +90,14 @@ export function AnalysisDisplay({ result }: { result: AnalysisResult }) {
                                 title="File Purpose Classifier"
                                 description="Get a natural language explanation of what any file does."
                             >
-                                <FilePurposeClassifierTool fileList={result.fileList} />
+                                <FilePurposeClassifierTool repoUrl={result.repoUrl} fileList={result.fileList} />
                             </ToolCard>
                             <ToolCard 
                                 icon={<KeyRound className="w-6 h-6 text-primary" />} 
                                 title="Environment Variable Scanner"
                                 description="Detect and understand the purpose of all .env variables."
                             >
-                               <EnvVarScannerTool />
+                               <EnvVarScannerTool repoUrl={result.repoUrl} envFileContent={result.envExampleContent} />
                             </ToolCard>
                         </div>
                     </div>

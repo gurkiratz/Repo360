@@ -7,7 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { classifyFilePurposeAction, type ClassifyFilePurposeOutput } from '@/app/actions';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-export function FilePurposeClassifierTool({ fileList }: { fileList: string[] }) {
+export function FilePurposeClassifierTool({ repoUrl, fileList }: { repoUrl: string, fileList: string[] }) {
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
     const [state, setState] = useState<{
         isLoading: boolean;
@@ -28,7 +28,7 @@ export function FilePurposeClassifierTool({ fileList }: { fileList: string[] }) 
 
         setState({ isLoading: true, result: null, error: null });
         try {
-            const result = await classifyFilePurposeAction({ fileName: selectedFile });
+            const result = await classifyFilePurposeAction({ repoUrl, fileName: selectedFile });
             if (!result) {
                 throw new Error('Classification failed to return a result.');
             }

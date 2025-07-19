@@ -13,6 +13,8 @@ import {z} from 'genkit';
 
 const SummarizeRepoInputSchema = z.object({
   repoUrl: z.string().describe('The URL of the GitHub repository.'),
+  readmeContent: z.string().describe('The content of the README.md file.'),
+  packageJsonContent: z.string().describe('The content of the package.json file.'),
 });
 export type SummarizeRepoInput = z.infer<typeof SummarizeRepoInputSchema>;
 
@@ -31,10 +33,17 @@ const prompt = ai.definePrompt({
   output: {schema: SummarizeRepoOutputSchema},
   prompt: `You are an AI expert in understanding and summarizing code repositories.
 
-  Given a GitHub repository URL, you will fetch the repository's README.md, package.json, and key folders.
-  You will then generate a concise summary of the repository, including its purpose, tech stack, and entry point.
+  Based on the provided README.md and package.json content, generate a concise summary of the repository.
+  Include its purpose, tech stack, and potential entry points.
 
   Repository URL: {{{repoUrl}}}
+  
+  README Content:
+  {{{readmeContent}}}
+
+  package.json Content:
+  {{{packageJsonContent}}}
+
   Summary:
   `,
 });
