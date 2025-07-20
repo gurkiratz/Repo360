@@ -1,9 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Fira+Code:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
   font-family: var(--font-body), sans-serif;
+}
+
+/* Gaming-inspired custom utilities */
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 10px currentColor;
+  }
+
+  .text-neon {
+    text-shadow: 0 0 5px currentColor, 0 0 10px currentColor,
+      0 0 20px currentColor;
+  }
+
+  .border-glow {
+    box-shadow: 0 0 10px -2px currentColor;
+  }
+
+  .achievement-glow {
+    box-shadow: 0 0 15px -3px currentColor, 0 0 25px -5px currentColor;
+  }
 }
 
 @layer base {
@@ -43,38 +65,72 @@ body {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 5.9% 10%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 5.9% 10%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 175 44% 60%;
-    --primary-foreground: 175 44% 10%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
+    /* Dark theme with enhanced gaming aesthetics */
+    --background: 240 15% 6%;
+    --foreground: 220 20% 95%;
+    --card: 240 15% 9%;
+    --card-foreground: 220 20% 95%;
+    --popover: 240 15% 9%;
+    --popover-foreground: 220 20% 95%;
+    --primary: 195 100% 60%; /* Brighter cyan for dark mode */
+    --primary-foreground: 195 100% 8%;
+    --secondary: 240 15% 15%;
+    --secondary-foreground: 220 20% 95%;
+    --muted: 240 15% 12%;
+    --muted-foreground: 220 15% 65%;
     --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 175 44% 60%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --accent-foreground: 280 100% 95%;
+    --destructive: 0 85% 65%;
+    --destructive-foreground: 0 85% 8%;
+    --border: 240 15% 18%;
+    --input: 240 15% 18%;
+    --ring: 195 100% 60%;
+
+    /* Enhanced dark chart colors */
+    --chart-1: 15 85% 70%;
+    --chart-2: 195 80% 65%;
+    --chart-3: 280 70% 70%;
+    --chart-4: 60 85% 70%;
+    --chart-5: 330 80% 70%;
+
+    /* Dark mode gamification colors */
+    --success: 140 70% 55%;
+    --success-foreground: 140 70% 8%;
+    --warning: 45 95% 65%;
+    --warning-foreground: 45 95% 8%;
+    --info: 210 85% 65%;
+    --info-foreground: 210 85% 8%;
+
+    /* Dark achievement colors */
+    --achievement-bronze: 25 80% 60%;
+    --achievement-silver: 210 20% 75%;
+    --achievement-gold: 48 95% 70%;
+    --achievement-diamond: 195 100% 80%;
+
+    /* Dark level colors */
+    --level-beginner: 120 65% 60%;
+    --level-intermediate: 45 90% 65%;
+    --level-advanced: 280 80% 70%;
+    --level-expert: 330 90% 65%;
+
+    /* Dark XP colors */
+    --xp: 280 100% 75%;
+    --xp-foreground: 280 100% 8%;
+
+    /* Dark neon colors */
+    --neon-cyan: 180 100% 70%;
+    --neon-purple: 280 100% 80%;
+    --neon-green: 120 100% 70%;
+    --neon-pink: 330 100% 80%;
+
+    --sidebar-background: 240 15% 9%;
+    --sidebar-foreground: 220 20% 90%;
+    --sidebar-primary: 195 100% 60%;
+    --sidebar-primary-foreground: 195 100% 8%;
+    --sidebar-accent: 240 15% 15%;
+    --sidebar-accent-foreground: 220 20% 90%;
+    --sidebar-border: 240 15% 18%;
+    --sidebar-ring: 195 100% 60%;
   }
 }
 

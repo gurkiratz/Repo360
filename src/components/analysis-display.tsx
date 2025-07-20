@@ -221,21 +221,21 @@ export function AnalysisDisplay({ result }: { result: AnalysisResult }) {
 
             <div>
               <h4 className="font-semibold text-primary mb-2 flex items-center gap-2">
-                <ListChecks className="w-4 h-4" />
-                How to Run
-              </h4>
-              <p className="text-base leading-relaxed pl-6">
-                {result.summary.howToRun}
-              </p>
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-primary mb-2 flex items-center gap-2">
                 <BrainCircuit className="w-4 h-4" />
                 Tech Stack
               </h4>
               <p className="text-base leading-relaxed pl-6">
                 {result.summary.techStack}
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-primary mb-2 flex items-center gap-2">
+                <ListChecks className="w-4 h-4" />
+                How to Run
+              </h4>
+              <p className="text-base leading-relaxed pl-6">
+                {result.summary.howToRun}
               </p>
             </div>
 

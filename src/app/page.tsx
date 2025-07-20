@@ -47,7 +47,9 @@ function Header() {
             }}
           ></motion.div>
           <Rotate3DIcon className="w-8 h-8 text-primary" />
-          <h1 className="text-2xl font-bold tracking-tight">Repo360</h1>
+          <h1 className="text-2xl font-bold tracking-tight font-game text-glow">
+            Repo360
+          </h1>
         </motion.div>
         <motion.div
           initial={{ x: 20, opacity: 0 }}
@@ -128,7 +130,7 @@ function RepoForm({
           >
             <Button
               type="submit"
-              className="w-full h-12 text-base"
+              className="w-full h-12 text-base border-glow hover:achievement-glow transition-all duration-300"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -293,13 +295,26 @@ export default function Home() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.8, ease: 'easeOut' }}
       >
-        <div className="container mx-auto text-center text-sm text-muted-foreground">
+        <div className="container mx-auto text-center text-sm text-muted-foreground space-y-3">
+          <div className="flex justify-center gap-2 flex-wrap">
+            <div className="inline-flex items-center gap-1 px-2 py-1 bg-success/10 text-success rounded-md border border-success/20">
+              <span className="w-2 h-2 bg-success rounded-full animate-pulse"></span>
+              <span className="text-xs font-semibold">Live</span>
+            </div>
+            <div className="inline-flex items-center gap-1 px-2 py-1 bg-xp/10 text-xp rounded-md border border-xp/20">
+              <span className="text-xs font-semibold">⚡ Fast Analysis</span>
+            </div>
+            <div className="inline-flex items-center gap-1 px-2 py-1 bg-achievement-gold/10 text-achievement-gold rounded-md border border-achievement-gold/20">
+              <span className="text-xs font-semibold">🏆 AI Powered</span>
+            </div>
+          </div>
           <p>
             Built with ❤️ by{' '}
             <Link
               href="https://github.com/gurkiratz"
               target="_blank"
               rel="noopener noreferrer"
+              className="text-primary hover:text-primary/80 font-semibold transition-colors"
             >
               Gurkirat Singh
             </Link>
