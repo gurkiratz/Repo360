@@ -17,7 +17,6 @@ import Link from 'next/link'
 
 const formSchema = z.object({
   repoUrl: z.string().url(),
-  // .regex(/^https:\/\/github\.com\/[\w-]+\/[\w-]+$/, 'Please enter a valid GitHub repository URL.'),
 })
 
 type FormValues = z.infer<typeof formSchema>
