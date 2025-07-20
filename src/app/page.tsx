@@ -347,6 +347,7 @@ export default function Home() {
                   Drowning in unfamiliar code? Paste a GitHub repo and get AI
                   guidance to start contributing with confidence.
                 </motion.p>
+
                 <motion.div
                   className="mt-8"
                   initial={{ y: 30, opacity: 0 }}
@@ -390,7 +391,15 @@ export default function Home() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.4, delay: 0.2 }}
               >
-                AI is analyzing the repository... this may take a moment.
+                {/* AI is analyzing the repository... this may take a moment. */}
+                Hold on - our analysis won{"'"}t end like this! 🤡️{' '}
+                <div className="mt-4">
+                  <img
+                    src="https://media1.tenor.com/m/A_nr2Ti6W8IAAAAC/coldplay-coldplay-concert.gif"
+                    alt="Loading animation"
+                    className="rounded-lg w-64 mx-auto"
+                  />
+                </div>
               </motion.p>
             </motion.div>
           )}
@@ -416,18 +425,6 @@ export default function Home() {
         transition={{ duration: 0.6, delay: 0.8, ease: 'easeOut' }}
       >
         <div className="container mx-auto text-center text-sm text-muted-foreground space-y-3">
-          <div className="flex justify-center gap-2 flex-wrap">
-            <div className="inline-flex items-center gap-1 px-2 py-1 bg-success/10 text-success rounded-md border border-success/20">
-              <span className="w-2 h-2 bg-success rounded-full animate-pulse"></span>
-              <span className="text-xs font-semibold">Live</span>
-            </div>
-            <div className="inline-flex items-center gap-1 px-2 py-1 bg-xp/10 text-xp rounded-md border border-xp/20">
-              <span className="text-xs font-semibold">⚡ Fast Analysis</span>
-            </div>
-            <div className="inline-flex items-center gap-1 px-2 py-1 bg-achievement-gold/10 text-achievement-gold rounded-md border border-achievement-gold/20">
-              <span className="text-xs font-semibold">🏆 AI Powered</span>
-            </div>
-          </div>
           <p>
             Built with ❤️ by{' '}
             <Link
