@@ -25,7 +25,7 @@ function parseRepoUrl(repoUrl: string): { owner: string; repo: string } {
     return { owner, repo }
   } catch (error) {
     throw new Error(
-      'Invalid repository URL format. Expected https://github.com/owner/repo'
+      'Invalid repository URL format. Expected https://github.com/username/repo'
     )
   }
 }

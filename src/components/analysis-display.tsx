@@ -286,7 +286,27 @@ export function AnalysisDisplay({ result }: { result: AnalysisResult }) {
             )}
           </CardContent>
         </Card>
-
+        {/* Architecture Diagram Section */}
+        <div className="mt-12">
+          <Card className="bg-gradient-to-br from-primary/5 via-accent/20 to-secondary/10 border-primary/20">
+            <CardHeader className="text-center">
+              <CardTitle className="text-3xl font-headline flex items-center justify-center gap-3">
+                <BrainCircuit className="w-8 h-8 text-primary animate-pulse" />
+                Repository Architecture
+              </CardTitle>
+              <CardDescription className="text-base">
+                AI-analyzed components and their relationships
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="px-8 pb-8">
+              <ArchitectureDiagram
+                architecture={result.architecture}
+                repoUrl={result.repoUrl}
+                defaultBranch={result.repoMetadata.defaultBranch}
+              />
+            </CardContent>
+          </Card>
+        </div>
         <div className="grid md:grid-cols-2 gap-8">
           <div>
             <div className="mb-4">
@@ -366,28 +386,6 @@ export function AnalysisDisplay({ result }: { result: AnalysisResult }) {
               </ToolCard>
             </div>
           </div>
-        </div>
-
-        {/* Architecture Diagram Section */}
-        <div className="mt-12">
-          <Card className="bg-gradient-to-br from-primary/5 via-accent/20 to-secondary/10 border-primary/20">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-headline flex items-center justify-center gap-3">
-                <BrainCircuit className="w-8 h-8 text-primary animate-pulse" />
-                Repository Architecture
-              </CardTitle>
-              <CardDescription className="text-base">
-                AI-analyzed components and their relationships
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="px-8 pb-8">
-              <ArchitectureDiagram
-                architecture={result.architecture}
-                repoUrl={result.repoUrl}
-                defaultBranch={result.repoMetadata.defaultBranch}
-              />
-            </CardContent>
-          </Card>
         </div>
       </div>
 

@@ -24,7 +24,7 @@ type FormValues = z.infer<typeof formSchema>
 function Header() {
   return (
     <motion.header
-      className="border-b"
+      className="border-b sticky top-0 bg-background z-50"
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -56,13 +56,14 @@ function Header() {
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
         >
-          <Button variant="ghost" size="icon" asChild>
+          <Button variant="ghost" asChild>
             <Link
               href="https://github.com/gurkiratz/Repo360"
               target="_blank"
               rel="noopener noreferrer"
             >
               <Github className="h-5 w-5" />
+              Star on GitHub
             </Link>
           </Button>
         </motion.div>
@@ -167,7 +168,7 @@ function RepoForm({
                     <div className="relative">
                       <Github className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                       <Input
-                        placeholder="https://github.com/owner/repo"
+                        placeholder="https://github.com/username/repo"
                         {...field}
                         className="pl-10 h-12 text-base"
                       />
@@ -334,7 +335,7 @@ export default function Home() {
                   transition={{ duration: 0.6, delay: 0.4, ease: 'easeOut' }}
                 >
                   {/* Unlock Any Codebase */}
-                  Understand Codebases, Instantly
+                  Understand Codebases, Start Contributing
                 </motion.h2>
                 <motion.p
                   className="mt-4 max-w-xl mx-auto text-lg text-muted-foreground"
