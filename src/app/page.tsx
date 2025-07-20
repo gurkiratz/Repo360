@@ -85,6 +85,63 @@ function RepoForm({
     },
   })
 
+  const exampleRepos = [
+    {
+      name: 'Warp',
+      url: 'https://github.com/warpdotdev/Warp',
+      description:
+        'An AI-native terminal for modern developers, built for coding with agents.',
+      color: 'text-purple-600 dark:text-purple-400',
+      badge: '💻️',
+    },
+    {
+      name: 'p-stream',
+      url: 'https://github.com/p-stream/p-stream',
+      description:
+        'Composable concurrency primitives for TypeScript — functional and elegant.',
+      color: 'text-teal-600 dark:text-teal-400',
+      badge: '🌀',
+    },
+    {
+      name: 'Neovim',
+      url: 'https://github.com/neovim/neovim',
+      description:
+        'Fork of Vim that focuses on extensibility and usability for modern workflows.',
+      color: 'text-green-700 dark:text-green-300',
+      badge: '📝',
+    },
+    {
+      name: 'vibe-draw',
+      url: 'https://github.com/martin226/vibe-draw',
+      description:
+        'Turn your roughest sketches into stunning 3D worlds by vibe drawing.',
+      color: 'text-pink-600 dark:text-pink-300',
+      badge: '🎨',
+    },
+    {
+      name: 'Classipod',
+      url: 'https://github.com/adeeteya/Classipod',
+      description:
+        'A nostalgic music player inspired by the iconic iPod Classic.',
+      color: 'text-rose-500 dark:text-rose-300',
+      badge: '🎵',
+    },
+    {
+      name: 'yt-dlp',
+      url: 'https://github.com/yt-dlp/yt-dlp',
+      description:
+        'Feature-rich command-line video/audio downloader forked from youtube-dl.',
+      color: 'text-yellow-600 dark:text-yellow-400',
+      badge: '📽️',
+    },
+  ]
+
+  const handleExampleClick = (repoUrl: string) => {
+    form.setValue('repoUrl', repoUrl)
+    // Optional: you can also auto-submit here if desired
+    // form.handleSubmit(onSubmit)()
+  }
+
   return (
     <motion.div
       initial={{ y: 20, opacity: 0 }}
@@ -144,6 +201,66 @@ function RepoForm({
             </Button>
           </motion.div>
         </form>
+
+        {/* Example Repositories Section */}
+        <motion.div
+          className="mt-12 text-center"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.8, ease: 'easeOut' }}
+        >
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent flex-1 max-w-24"></div>
+            <p className="text-sm text-muted-foreground font-medium px-4">
+              Try some of these open source projects
+            </p>
+            <div className="h-px bg-gradient-to-l from-transparent via-border to-transparent flex-1 max-w-24"></div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-w-4xl mx-auto">
+            {exampleRepos.map((repo, index) => (
+              <motion.button
+                key={repo.url}
+                onClick={() => handleExampleClick(repo.url)}
+                className="group relative p-4 rounded-lg border border-border/50 bg-card/50 hover:bg-card hover:border-primary/30 transition-all duration-200 text-left hover:shadow-md"
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{
+                  duration: 0.4,
+                  delay: 0.9 + index * 0.05,
+                  ease: 'easeOut',
+                }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">{repo.badge}</span>
+                    <h4
+                      className={`font-semibold text-sm ${repo.color} group-hover:text-primary transition-colors`}
+                    >
+                      {repo.name}
+                    </h4>
+                  </div>
+                  <Github className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                </div>
+                <p className="text-xs text-muted-foreground group-hover:text-foreground transition-colors line-clamp-2">
+                  {repo.description}
+                </p>
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-primary/0 via-primary/0 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+              </motion.button>
+            ))}
+          </div>
+
+          <motion.p
+            className="text-xs text-muted-foreground mt-4 opacity-60"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.6 }}
+            transition={{ duration: 0.6, delay: 1.2 }}
+          >
+            Click any project to analyze it instantly
+          </motion.p>
+        </motion.div>
       </Form.Form>
     </motion.div>
   )
@@ -216,7 +333,8 @@ export default function Home() {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.6, delay: 0.4, ease: 'easeOut' }}
                 >
-                  Unlock Any Codebase
+                  {/* Unlock Any Codebase */}
+                  Understand Codebases, Instantly
                 </motion.h2>
                 <motion.p
                   className="mt-4 max-w-xl mx-auto text-lg text-muted-foreground"
@@ -224,8 +342,10 @@ export default function Home() {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.6, delay: 0.5, ease: 'easeOut' }}
                 >
-                  Paste a GitHub repository URL to get an AI-powered summary,
-                  file explanations, and more.
+                  {/* Paste a GitHub repository URL to get an AI-powered summary,
+                  file explanations, and more. */}
+                  Drowning in unfamiliar code? Paste a GitHub repo and get AI
+                  guidance to start contributing with confidence.
                 </motion.p>
                 <motion.div
                   className="mt-8"
