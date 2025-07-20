@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { z } from 'zod'
 import { Github, LoaderCircle, Sparkles, Rotate3DIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -75,16 +76,47 @@ function Header() {
 function RepoForm({
   onSubmit,
   isSubmitting,
+  initialValue = '',
+  autoAnalyze = false,
 }: {
   onSubmit: (data: FormValues) => void
   isSubmitting: boolean
+  initialValue?: string
+  autoAnalyze?: boolean
 }) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      repoUrl: '',
+      repoUrl: initialValue,
     },
   })
+
+  // Auto-trigger analysis if URL parameter is provided
+  useEffect(() => {
+    if (autoAnalyze && initialValue && !isSubmitting) {
+      // Validate the URL first
+      try {
+        formSchema.parse({ repoUrl: initialValue })
+        // Trigger submission after a brief delay to allow form to render
+        setTimeout(() => {
+          form.handleSubmit(onSubmit)()
+        }, 500)
+      } catch (error) {
+        // Invalid URL, don't auto-analyze
+        console.warn(
+          'Invalid repo URL provided in query parameter:',
+          initialValue
+        )
+      }
+    }
+  }, [autoAnalyze, initialValue, isSubmitting, form, onSubmit])
+
+  // Update form value when initialValue changes
+  useEffect(() => {
+    if (initialValue) {
+      form.setValue('repoUrl', initialValue)
+    }
+  }, [initialValue, form])
 
   const exampleRepos = [
     {
@@ -92,15 +124,14 @@ function RepoForm({
       url: 'https://github.com/warpdotdev/Warp',
       description:
         'An AI-native terminal for modern developers, built for coding with agents.',
-      color: 'text-purple-600 dark:text-purple-400',
+      color: 'text-blue-600 dark:text-blue-400',
       badge: '💻️',
     },
     {
       name: 'p-stream',
       url: 'https://github.com/p-stream/p-stream',
-      description:
-        'Composable concurrency primitives for TypeScript — functional and elegant.',
-      color: 'text-teal-600 dark:text-teal-400',
+      description: 'Open-source Movie Streaming Platform',
+      color: 'text-purple-600 dark:text-purple-400',
       badge: '🌀',
     },
     {
@@ -128,12 +159,11 @@ function RepoForm({
       badge: '🎵',
     },
     {
-      name: 'yt-dlp',
-      url: 'https://github.com/yt-dlp/yt-dlp',
-      description:
-        'Feature-rich command-line video/audio downloader forked from youtube-dl.',
-      color: 'text-yellow-600 dark:text-yellow-400',
-      badge: '📽️',
+      name: 'opencode',
+      url: 'https://github.com/sst/opencode',
+      description: 'AI coding agent, built for the terminal.',
+      color: 'text-orange-600 dark:text-orange-400',
+      badge: '🤖',
     },
   ]
 
@@ -267,7 +297,8 @@ function RepoForm({
   )
 }
 
-export default function Home() {
+function HomeContent() {
+  const searchParams = useSearchParams()
   const [state, setState] = useState<{
     isLoading: boolean
     result: AnalysisResult | null
@@ -279,6 +310,10 @@ export default function Home() {
   })
 
   const { toast } = useToast()
+
+  // Get repo URL from query parameters
+  const repoFromUrl = searchParams.get('repo') || ''
+  const shouldAutoAnalyze = Boolean(repoFromUrl)
 
   const handleSubmit = async (data: FormValues) => {
     setState({ isLoading: true, result: null, error: null })
@@ -358,6 +393,8 @@ export default function Home() {
                   <RepoForm
                     onSubmit={handleSubmit}
                     isSubmitting={state.isLoading}
+                    initialValue={repoFromUrl}
+                    autoAnalyze={shouldAutoAnalyze}
                   />
                 </motion.div>
               </div>
@@ -387,7 +424,7 @@ export default function Home() {
                 <LoaderCircle className="h-12 w-12 animate-spin text-primary" />
               </motion.div>
               <motion.p
-                className="mt-4 text-muted-foreground"
+                className="mt-4 text-muted-foreground text-2xl"
                 initial={{ y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.4, delay: 0.2 }}
@@ -438,5 +475,19 @@ export default function Home() {
         </div>
       </motion.footer>
     </div>
+  )
+}
+
+export default function Home() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-screen">
+          <LoaderCircle className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <HomeContent />
+    </Suspense>
   )
 }
