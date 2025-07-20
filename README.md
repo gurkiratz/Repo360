@@ -1,4 +1,4 @@
-# 🎯 Repo360
+# Repo360
 
 **Understand any codebase, instantly.**
 
