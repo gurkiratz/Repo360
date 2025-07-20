@@ -1,6 +1,7 @@
 'use server'
 
 import {
+  analyzeArchitecture,
   summarizeRepo,
   suggestEntryPoints,
   explainFiles,
@@ -8,6 +9,7 @@ import {
   classifyFilePurpose,
 } from '@/ai/flows'
 import type {
+  AnalyzeArchitectureOutput,
   SummarizeRepoOutput,
   SuggestEntryPointsOutput,
   ExplainFilesOutput,
@@ -21,6 +23,7 @@ export type AnalysisResult = {
   summary: SummarizeRepoOutput
   entryPoints: SuggestEntryPointsOutput
   explanations: ExplainFilesOutput
+  architecture: AnalyzeArchitectureOutput
   fileList: string[]
   envExampleContent: string | null
   readmeContent: string
@@ -71,11 +74,20 @@ export async function analyzeRepoAction({
       fileList: entryPoints.suggestedFiles,
     })
 
+    // 4. Analyze the architecture
+    const architecture = await analyzeArchitecture({
+      repoUrl,
+      readmeContent,
+      packageJsonContent,
+      fileList,
+    })
+
     return {
       repoUrl,
       summary,
       entryPoints,
       explanations,
+      architecture,
       fileList,
       envExampleContent,
       readmeContent,
@@ -116,6 +128,7 @@ export async function classifyFilePurposeAction({
 }
 
 export {
+  analyzeArchitecture,
   summarizeRepo,
   suggestEntryPoints,
   explainFiles,
@@ -123,6 +136,7 @@ export {
   classifyFilePurpose,
 }
 export type {
+  AnalyzeArchitectureOutput,
   SummarizeRepoOutput,
   SuggestEntryPointsOutput,
   ExplainFilesOutput,
