@@ -394,13 +394,11 @@ export default function Home() {
               >
                 {/* AI is analyzing the repository... this may take a moment. */}
                 Hold on - our analysis won{"'"}t end like this! 🤡️{' '}
-                <div className="mt-4">
-                  <img
-                    src="https://media1.tenor.com/m/A_nr2Ti6W8IAAAAC/coldplay-coldplay-concert.gif"
-                    alt="Loading animation"
-                    className="rounded-lg w-64 mx-auto"
-                  />
-                </div>
+                <img
+                  src="https://media1.tenor.com/m/A_nr2Ti6W8IAAAAC/coldplay-coldplay-concert.gif"
+                  alt="Loading animation"
+                  className="rounded-lg w-64 mx-auto"
+                />
               </motion.p>
             </motion.div>
           )}

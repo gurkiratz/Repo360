@@ -1,4 +1,5 @@
 export * from './analyze-architecture'
+export * from './analyze-contributing-steps'
 export * from './classify-file-purpose'
 export * from './explain-files'
 export * from './scan-env-vars'

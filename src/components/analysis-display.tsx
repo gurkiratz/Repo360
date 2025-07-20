@@ -25,11 +25,13 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import {
+  AlertTriangle,
   BrainCircuit,
   ChevronLeft,
   ChevronRight,
   ExternalLink,
   FileCode,
+  GitFork,
   KeyRound,
   ListChecks,
   ScanLine,
@@ -39,6 +41,7 @@ import {
 import { WhatToReadFirstTool } from '@/components/tools/what-to-read-first-tool'
 import { EnvVarScannerTool } from '@/components/tools/env-var-scanner-tool'
 import { ArchitectureDiagram } from '@/components/architecture-diagram'
+import { ContributingSteps } from '@/components/contributing-steps'
 import { FilePurposeClassifierTool } from '@/components/tools/file-purpose-classifier-tool'
 
 function ToolCard({
@@ -307,6 +310,24 @@ export function AnalysisDisplay({ result }: { result: AnalysisResult }) {
             </CardContent>
           </Card>
         </div>
+
+        {/* Contributing Steps Section */}
+        <div className="mt-12">
+          <Card className="bg-gradient-to-br from-success/5 via-accent/20 to-primary/10 border-success/20">
+            <CardHeader className="text-center">
+              <CardTitle className="text-3xl font-headline flex items-center justify-center gap-3">
+                Start Contributing
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="px-8 pb-8">
+              <ContributingSteps
+                contributingSteps={result.contributingSteps}
+                repoUrl={result.repoUrl}
+              />
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="grid md:grid-cols-2 gap-8">
           <div>
             <div className="mb-4">
