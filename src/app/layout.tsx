@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
+import { Header } from '@/components/header'
 
 export const metadata: Metadata = {
   title: 'Repo360',
@@ -27,7 +28,8 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased min-h-screen flex flex-col">
-        {children}
+        <Header />
+        <main className="flex-1">{children}</main>
         <Toaster />
       </body>
     </html>

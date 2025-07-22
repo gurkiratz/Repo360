@@ -8,7 +8,7 @@
  * - AnalyzeArchitectureOutput - The return type for the analyzeArchitecture function
  */
 
-import { ai } from '@/ai/genkit'
+import { getAI } from '@/ai/genkit-dynamic'
 import { z } from 'genkit'
 
 const AnalyzeArchitectureInputSchema = z.object({
@@ -72,16 +72,16 @@ export type AnalyzeArchitectureOutput = z.infer<
 >
 
 export async function analyzeArchitecture(
-  input: AnalyzeArchitectureInput
+  input: AnalyzeArchitectureInput,
+  userApiKey?: string
 ): Promise<AnalyzeArchitectureOutput> {
-  return analyzeArchitectureFlow(input)
-}
+  const ai = getAI(userApiKey)
 
-const prompt = ai.definePrompt({
-  name: 'analyzeArchitecturePrompt',
-  input: { schema: AnalyzeArchitectureInputSchema },
-  output: { schema: AnalyzeArchitectureOutputSchema },
-  prompt: `You are an expert software architect analyzing a repository structure.
+  const prompt = ai.definePrompt({
+    name: 'analyzeArchitecturePrompt',
+    input: { schema: AnalyzeArchitectureInputSchema },
+    output: { schema: AnalyzeArchitectureOutputSchema },
+    prompt: `You are an expert software architect analyzing a repository structure.
 
 Analyze the repository structure and identify the main architectural components and their relationships.
 
@@ -125,16 +125,19 @@ File List: {{#each fileList}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
 5. **Unique IDs**: Use simple, descriptive IDs like "frontend", "api", "database", etc.
 
 Focus on the actual architecture based on the files present, not theoretical possibilities.`,
-})
+  })
 
-const analyzeArchitectureFlow = ai.defineFlow(
-  {
-    name: 'analyzeArchitectureFlow',
-    inputSchema: AnalyzeArchitectureInputSchema,
-    outputSchema: AnalyzeArchitectureOutputSchema,
-  },
-  async (input) => {
-    const { output } = await prompt(input)
-    return output!
-  }
-)
+  const analyzeArchitectureFlow = ai.defineFlow(
+    {
+      name: 'analyzeArchitectureFlow',
+      inputSchema: AnalyzeArchitectureInputSchema,
+      outputSchema: AnalyzeArchitectureOutputSchema,
+    },
+    async (input: AnalyzeArchitectureInput) => {
+      const { output } = await prompt(input)
+      return output!
+    }
+  )
+
+  return analyzeArchitectureFlow(input)
+}

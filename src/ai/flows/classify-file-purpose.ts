@@ -8,7 +8,7 @@
  * - ClassifyFilePurposeOutput - The return type for the classifyFilePurpose function.
  */
 
-import { ai } from '@/ai/genkit'
+import { getAI } from '@/ai/genkit-dynamic'
 import { z } from 'genkit'
 
 const ClassifyFilePurposeInputSchema = z.object({
@@ -37,16 +37,16 @@ export type ClassifyFilePurposeOutput = z.infer<
 >
 
 export async function classifyFilePurpose(
-  input: ClassifyFilePurposeInput
+  input: ClassifyFilePurposeInput,
+  userApiKey?: string
 ): Promise<ClassifyFilePurposeOutput> {
-  return classifyFilePurposeFlow(input)
-}
+  const ai = getAI(userApiKey)
 
-const prompt = ai.definePrompt({
-  name: 'classifyFilePurposePrompt',
-  input: { schema: ClassifyFilePurposeInputSchema },
-  output: { schema: ClassifyFilePurposeOutputSchema },
-  prompt: `You are an AI expert in classifying files in software repositories.
+  const prompt = ai.definePrompt({
+    name: 'classifyFilePurposePrompt',
+    input: { schema: ClassifyFilePurposeInputSchema },
+    output: { schema: ClassifyFilePurposeOutputSchema },
+    prompt: `You are an AI expert in classifying files in software repositories.
 
 Analyze the file and provide:
 1. A concise 1-line description of what this file does
@@ -62,16 +62,19 @@ File Content:
 {{/if}}
 
 Focus on being concise and actionable for developers who want to understand the codebase quickly.`,
-})
+  })
 
-const classifyFilePurposeFlow = ai.defineFlow(
-  {
-    name: 'classifyFilePurposeFlow',
-    inputSchema: ClassifyFilePurposeInputSchema,
-    outputSchema: ClassifyFilePurposeOutputSchema,
-  },
-  async (input) => {
-    const { output } = await prompt(input)
-    return output!
-  }
-)
+  const classifyFilePurposeFlow = ai.defineFlow(
+    {
+      name: 'classifyFilePurposeFlow',
+      inputSchema: ClassifyFilePurposeInputSchema,
+      outputSchema: ClassifyFilePurposeOutputSchema,
+    },
+    async (input: ClassifyFilePurposeInput) => {
+      const { output } = await prompt(input)
+      return output!
+    }
+  )
+
+  return classifyFilePurposeFlow(input)
+}

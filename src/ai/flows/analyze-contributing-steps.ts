@@ -8,7 +8,7 @@
  * - AnalyzeContributingStepsOutput - The return type for the analyzeContributingSteps function
  */
 
-import { ai } from '@/ai/genkit'
+import { getAI } from '@/ai/genkit-dynamic'
 import { z } from 'genkit'
 
 const AnalyzeContributingStepsInputSchema = z.object({
@@ -66,16 +66,16 @@ export type AnalyzeContributingStepsOutput = z.infer<
 >
 
 export async function analyzeContributingSteps(
-  input: AnalyzeContributingStepsInput
+  input: AnalyzeContributingStepsInput,
+  userApiKey?: string
 ): Promise<AnalyzeContributingStepsOutput> {
-  return analyzeContributingStepsFlow(input)
-}
+  const ai = getAI(userApiKey)
 
-const prompt = ai.definePrompt({
-  name: 'analyzeContributingStepsPrompt',
-  input: { schema: AnalyzeContributingStepsInputSchema },
-  output: { schema: AnalyzeContributingStepsOutputSchema },
-  prompt: `You are an expert developer onboarding specialist. Analyze this repository and create specific, actionable contributing steps.
+  const prompt = ai.definePrompt({
+    name: 'analyzeContributingStepsPrompt',
+    input: { schema: AnalyzeContributingStepsInputSchema },
+    output: { schema: AnalyzeContributingStepsOutputSchema },
+    prompt: `You are an expert developer onboarding specialist. Analyze this repository and create specific, actionable contributing steps.
 
 Repository URL: {{{repoUrl}}}
 
@@ -125,16 +125,19 @@ Files: {{#each fileList}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
    - Technology stack complexity
 
 Focus on being practical and actionable. If local development isn't possible (e.g., requires paid services, complex infrastructure), clearly state this.`,
-})
+  })
 
-const analyzeContributingStepsFlow = ai.defineFlow(
-  {
-    name: 'analyzeContributingStepsFlow',
-    inputSchema: AnalyzeContributingStepsInputSchema,
-    outputSchema: AnalyzeContributingStepsOutputSchema,
-  },
-  async (input) => {
-    const { output } = await prompt(input)
-    return output!
-  }
-)
+  const analyzeContributingStepsFlow = ai.defineFlow(
+    {
+      name: 'analyzeContributingStepsFlow',
+      inputSchema: AnalyzeContributingStepsInputSchema,
+      outputSchema: AnalyzeContributingStepsOutputSchema,
+    },
+    async (input: AnalyzeContributingStepsInput) => {
+      const { output } = await prompt(input)
+      return output!
+    }
+  )
+
+  return analyzeContributingStepsFlow(input)
+}

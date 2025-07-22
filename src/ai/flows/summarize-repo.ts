@@ -8,7 +8,7 @@
  * - SummarizeRepoOutput - The return type for the summarizeRepo function.
  */
 
-import { ai } from '@/ai/genkit'
+import { getAI } from '@/ai/genkit-dynamic'
 import { z } from 'genkit'
 
 const SummarizeRepoInputSchema = z.object({
@@ -43,37 +43,16 @@ const SummarizeRepoOutputSchema = z.object({
 export type SummarizeRepoOutput = z.infer<typeof SummarizeRepoOutputSchema>
 
 export async function summarizeRepo(
-  input: SummarizeRepoInput
+  input: SummarizeRepoInput,
+  userApiKey?: string
 ): Promise<SummarizeRepoOutput> {
-  return summarizeRepoFlow(input)
-}
+  const ai = getAI(userApiKey)
 
-// const prompt = ai.definePrompt({
-//   name: 'summarizeRepoPrompt',
-//   input: { schema: SummarizeRepoInputSchema },
-//   output: { schema: SummarizeRepoOutputSchema },
-//   prompt: `You are an AI expert in understanding and summarizing code repositories.
-
-//   Based on the provided README.md and package.json content, generate a concise summary of the repository.
-//   Include its purpose, tech stack, and potential entry points.
-
-//   Repository URL: {{{repoUrl}}}
-
-//   README Content:
-//   {{{readmeContent}}}
-
-//   package.json Content:
-//   {{{packageJsonContent}}}
-
-//   Summary:
-//   `,
-// })
-
-const prompt = ai.definePrompt({
-  name: 'summarizeRepoPrompt',
-  input: { schema: SummarizeRepoInputSchema },
-  output: { schema: SummarizeRepoOutputSchema },
-  prompt: `You are an expert code repository analyzer. Generate a concise Executive Summary with exactly 4 sections.
+  const prompt = ai.definePrompt({
+    name: 'summarizeRepoPrompt',
+    input: { schema: SummarizeRepoInputSchema },
+    output: { schema: SummarizeRepoOutputSchema },
+    prompt: `You are an expert code repository analyzer. Generate a concise Executive Summary with exactly 4 sections.
 
 ## Repository Information:
 **URL:** {{{repoUrl}}}
@@ -113,16 +92,19 @@ Format as comma-separated list.
 List 2-3 most important files.
 
 Keep each section concise and actionable for developers.`,
-})
+  })
 
-const summarizeRepoFlow = ai.defineFlow(
-  {
-    name: 'summarizeRepoFlow',
-    inputSchema: SummarizeRepoInputSchema,
-    outputSchema: SummarizeRepoOutputSchema,
-  },
-  async (input) => {
-    const { output } = await prompt(input)
-    return output!
-  }
-)
+  const summarizeRepoFlow = ai.defineFlow(
+    {
+      name: 'summarizeRepoFlow',
+      inputSchema: SummarizeRepoInputSchema,
+      outputSchema: SummarizeRepoOutputSchema,
+    },
+    async (input: SummarizeRepoInput) => {
+      const { output } = await prompt(input)
+      return output!
+    }
+  )
+
+  return summarizeRepoFlow(input)
+}

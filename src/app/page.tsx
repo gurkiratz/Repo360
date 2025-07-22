@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { z } from 'zod'
-import { Github, LoaderCircle, Sparkles, Rotate3DIcon } from 'lucide-react'
+import { Github, LoaderCircle, Sparkles, Rotate3DIcon, Key } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -13,6 +13,8 @@ import { Input } from '@/components/ui/input'
 import { useToast } from '@/hooks/use-toast'
 import { analyzeRepoAction, type AnalysisResult } from '@/app/actions'
 import { AnalysisDisplay } from '@/components/analysis-display'
+import { getClientApiKey, isApiKeyError } from '@/lib/api-key-utils'
+import { ApiKeyModal } from '@/components/ui/api-key-modal'
 import Link from 'next/link'
 
 const formSchema = z.object({
@@ -20,57 +22,6 @@ const formSchema = z.object({
 })
 
 type FormValues = z.infer<typeof formSchema>
-
-function Header() {
-  return (
-    <motion.header
-      className="border-b sticky top-0 bg-background z-50"
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-    >
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <motion.div
-          className="flex items-center gap-2"
-          initial={{ x: -20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
-        >
-          <motion.div
-            animate={{
-              rotate: [0, 360],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              rotate: { duration: 2, repeat: Infinity, ease: 'linear' },
-              scale: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
-            }}
-          ></motion.div>
-          <Rotate3DIcon className="w-8 h-8 text-primary" />
-          <h1 className="text-2xl font-bold tracking-tight font-game text-glow">
-            Repo360
-          </h1>
-        </motion.div>
-        <motion.div
-          initial={{ x: 20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
-        >
-          <Button variant="ghost" asChild>
-            <Link
-              href="https://github.com/gurkiratz/Repo360"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Github className="h-5 w-5" />
-              Star on GitHub
-            </Link>
-          </Button>
-        </motion.div>
-      </div>
-    </motion.header>
-  )
-}
 
 function RepoForm({
   onSubmit,
@@ -307,6 +258,7 @@ function HomeContent() {
     result: null,
     error: null,
   })
+  const [showApiKeyModal, setShowApiKeyModal] = useState(false)
 
   const { toast } = useToast()
 
@@ -317,15 +269,47 @@ function HomeContent() {
   const handleSubmit = async (data: FormValues) => {
     setState({ isLoading: true, result: null, error: null })
     try {
-      const result = await analyzeRepoAction(data)
+      // Get user API key from localStorage
+      const userApiKey = getClientApiKey()
+
+      const result = await analyzeRepoAction({
+        ...data,
+        userApiKey: userApiKey || undefined,
+      })
+
       if (result) {
         setState({ isLoading: false, result, error: null })
       } else {
         throw new Error('Analysis failed to return a result.')
       }
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'An unknown error occurred.'
+      const error =
+        err instanceof Error ? err : new Error('An unknown error occurred.')
+      const errorMessage = error.message
+
+      // Check if this is an API key related error
+      if (isApiKeyError(error)) {
+        setState({ isLoading: false, result: null, error: errorMessage })
+        toast({
+          variant: 'destructive',
+          title: 'API Key Error',
+          description:
+            'Your API key is invalid or expired. Please check your Google AI Studio API key.',
+          action: (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowApiKeyModal(true)}
+              className="text-white"
+            >
+              <Key className="w-4 h-4 mr-1" />
+              Set API Key
+            </Button>
+          ),
+        })
+        return
+      }
+
       setState({ isLoading: false, result: null, error: errorMessage })
       toast({
         variant: 'destructive',
@@ -335,9 +319,20 @@ function HomeContent() {
     }
   }
 
+  const handleSaveApiKey = (apiKey: string) => {
+    if (apiKey) {
+      localStorage.setItem('google-ai-api-key', apiKey)
+    } else {
+      localStorage.removeItem('google-ai-api-key')
+    }
+  }
+
+  const getCurrentApiKey = () => {
+    return localStorage.getItem('google-ai-api-key') || ''
+  }
+
   return (
     <div className="flex flex-col flex-1">
-      <Header />
       <main className="flex-1">
         <AnimatePresence mode="wait">
           {!state.result && !state.isLoading && (
@@ -451,6 +446,13 @@ function HomeContent() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        <ApiKeyModal
+          isOpen={showApiKeyModal}
+          onClose={() => setShowApiKeyModal(false)}
+          onSave={handleSaveApiKey}
+          currentKey={getCurrentApiKey()}
+        />
       </main>
 
       <motion.footer

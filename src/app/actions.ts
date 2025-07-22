@@ -40,8 +40,10 @@ export type AnalysisResult = {
 
 export async function analyzeRepoAction({
   repoUrl,
+  userApiKey,
 }: {
   repoUrl: string
+  userApiKey?: string
 }): Promise<AnalysisResult | null> {
   try {
     const {
@@ -53,45 +55,60 @@ export async function analyzeRepoAction({
     } = await fetchRepoData(repoUrl)
 
     // 1. Summarize the repo
-    const summary = await summarizeRepo({
-      repoUrl,
-      readmeContent,
-      packageJsonContent,
-    })
+    const summary = await summarizeRepo(
+      {
+        repoUrl,
+        readmeContent,
+        packageJsonContent,
+      },
+      userApiKey
+    )
 
     // 2. Suggest entry points
-    const entryPoints = await suggestEntryPoints({
-      repoUrl,
-      readmeContent,
-      packageJsonContent,
-      fileList,
-    })
+    const entryPoints = await suggestEntryPoints(
+      {
+        repoUrl,
+        readmeContent,
+        packageJsonContent,
+        fileList,
+      },
+      userApiKey
+    )
 
     if (!entryPoints?.suggestedFiles?.length) {
       throw new Error('AI could not determine entry points.')
     }
 
     // 3. Explain the major files
-    const explanations = await explainFiles({
-      repoUrl,
-      fileList: entryPoints.suggestedFiles,
-    })
+    const explanations = await explainFiles(
+      {
+        repoUrl,
+        fileList: entryPoints.suggestedFiles,
+      },
+      userApiKey
+    )
 
     // 4. Analyze the architecture
-    const architecture = await analyzeArchitecture({
-      repoUrl,
-      readmeContent,
-      packageJsonContent,
-      fileList,
-    })
+    const architecture = await analyzeArchitecture(
+      {
+        repoUrl,
+        readmeContent,
+        packageJsonContent,
+        fileList,
+      },
+      userApiKey
+    )
 
     // 5. Analyze contributing steps
-    const contributingSteps = await analyzeContributingSteps({
-      repoUrl,
-      readmeContent,
-      packageJsonContent,
-      fileList,
-    })
+    const contributingSteps = await analyzeContributingSteps(
+      {
+        repoUrl,
+        readmeContent,
+        packageJsonContent,
+        fileList,
+      },
+      userApiKey
+    )
 
     return {
       repoUrl,
@@ -118,25 +135,29 @@ export async function analyzeRepoAction({
 export async function scanEnvVarsAction({
   repoUrl,
   envFileContent,
+  userApiKey,
 }: {
   repoUrl: string
   envFileContent: string | null
+  userApiKey?: string
 }): Promise<ScanEnvVarsOutput> {
   if (!envFileContent) {
     return { variableExplanations: [] }
   }
-  return await scanEnvVars({ envFileContent })
+  return await scanEnvVars({ envFileContent }, userApiKey)
 }
 
 export async function classifyFilePurposeAction({
   repoUrl,
   fileName,
+  userApiKey,
 }: {
   repoUrl: string
   fileName: string
+  userApiKey?: string
 }): Promise<ClassifyFilePurposeOutput> {
   const fileContent = await fetchFileContent(repoUrl, fileName)
-  return await classifyFilePurpose({ fileName, fileContent })
+  return await classifyFilePurpose({ fileName, fileContent }, userApiKey)
 }
 
 export {
