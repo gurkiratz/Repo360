@@ -14,22 +14,29 @@ export function Header() {
 
   // Check if user has saved an API key
   useEffect(() => {
-    const savedKey = localStorage.getItem('google-ai-api-key')
-    setHasApiKey(!!savedKey)
+    if (typeof window !== 'undefined') {
+      const savedKey = localStorage.getItem('google-ai-api-key')
+      setHasApiKey(!!savedKey)
+    }
   }, [])
 
   const handleSaveApiKey = (apiKey: string) => {
-    if (apiKey) {
-      localStorage.setItem('google-ai-api-key', apiKey)
-      setHasApiKey(true)
-    } else {
-      localStorage.removeItem('google-ai-api-key')
-      setHasApiKey(false)
+    if (typeof window !== 'undefined') {
+      if (apiKey) {
+        localStorage.setItem('google-ai-api-key', apiKey)
+        setHasApiKey(true)
+      } else {
+        localStorage.removeItem('google-ai-api-key')
+        setHasApiKey(false)
+      }
     }
   }
 
   const getCurrentApiKey = () => {
-    return localStorage.getItem('google-ai-api-key') || ''
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('google-ai-api-key') || ''
+    }
+    return ''
   }
 
   return (

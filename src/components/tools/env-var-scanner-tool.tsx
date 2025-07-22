@@ -38,7 +38,10 @@ export function EnvVarScannerTool({
   const handleScan = async () => {
     setState({ isLoading: true, result: null, error: null })
     try {
-      const userApiKey = localStorage.getItem('google-ai-api-key') || undefined
+      const userApiKey =
+        typeof window !== 'undefined'
+          ? localStorage.getItem('google-ai-api-key') || undefined
+          : undefined
       const result = await scanEnvVarsAction({
         repoUrl,
         envFileContent,

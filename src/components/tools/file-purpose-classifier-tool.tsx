@@ -47,7 +47,10 @@ export function FilePurposeClassifierTool({
 
     setState({ isLoading: true, result: null, error: null })
     try {
-      const userApiKey = localStorage.getItem('google-ai-api-key') || undefined
+      const userApiKey =
+        typeof window !== 'undefined'
+          ? localStorage.getItem('google-ai-api-key') || undefined
+          : undefined
       const result = await classifyFilePurposeAction({
         repoUrl,
         fileName: selectedFile,

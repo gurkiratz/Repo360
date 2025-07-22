@@ -300,7 +300,7 @@ function HomeContent() {
               variant="outline"
               size="sm"
               onClick={() => setShowApiKeyModal(true)}
-              className="text-white"
+              className="text-foreground"
             >
               <Key className="w-4 h-4 mr-1" />
               Set API Key
@@ -320,15 +320,20 @@ function HomeContent() {
   }
 
   const handleSaveApiKey = (apiKey: string) => {
-    if (apiKey) {
-      localStorage.setItem('google-ai-api-key', apiKey)
-    } else {
-      localStorage.removeItem('google-ai-api-key')
+    if (typeof window !== 'undefined') {
+      if (apiKey) {
+        localStorage.setItem('google-ai-api-key', apiKey)
+      } else {
+        localStorage.removeItem('google-ai-api-key')
+      }
     }
   }
 
   const getCurrentApiKey = () => {
-    return localStorage.getItem('google-ai-api-key') || ''
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('google-ai-api-key') || ''
+    }
+    return ''
   }
 
   return (
