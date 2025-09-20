@@ -4,8 +4,9 @@
 
 Repo360 is an AI-powered repository analyzer that transforms overwhelming codebases into clear, digestible insights. Simply paste a GitHub URL and get instant architectural breakdowns, file explanations, and guided exploration paths.
 
-![Landing Page](public/landing-page.png)
+Demo Video - [https://youtu.be/LAD-kBDGYUk](https://youtu.be/LAD-kBDGYUk)
 
+![Landing Page](public/landing-page.png)
 > Inspired by [GitDiagram](https://gitdiagram.com) by [Ahmed](https://github.com/ahmedkhaleel2004) - Another great tool for visualizing Git repositories!
 
 ## Why Repo360?
